@@ -1,0 +1,55 @@
+﻿<Window x:Class="WeatherApp.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WeatherApp"
+        mc:Ignorable="d"
+        Title="WeatherWindow" Height="600" Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="20">
+            <TextBlock Text="Search for a city:"/>
+            <TextBox x:Name="cityName"/>
+            <Button Content="Search"
+                    Margin="0 10"/>
+            <ListView>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <TextBlock/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+        <Grid Grid.Row="1"
+              Background="#4392f1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Margin="0 10">
+                <TextBlock Text="SanFrancisco"
+                           Foreground="#f4f4f8"
+                           FontSize="20"
+                           Margin="20 0"/>
+                <TextBlock Text="overcast"
+                           Foreground="#f4f4f8"
+                           FontSize="18"
+                           Margin="20 0"/>
+            </StackPanel>
+            <Grid Grid.Column="1">
+                <TextBlock Text="10 C"
+                           Foreground="#f4f4f8"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="32"
+                           Margin="20 0"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
