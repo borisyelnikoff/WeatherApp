@@ -15,6 +15,6 @@ namespace WeatherApp.Model
         public int Rank { get; set; }
         public string LocalizedName { get; set; }
         public Country Country { get; set; }
-        public AdministrativeArea AdministrativeArea { get; set; }
+        public Area Area { get; set; }
     }
 }
