@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using WeatherApp.Model;
+using WeatherApp.ViewModel.Commands;
+using WeatherApp.ViewModel.Helpers;
 
 namespace WeatherApp.ViewModel
 {
@@ -14,24 +18,21 @@ namespace WeatherApp.ViewModel
         private CurrentConditions _currentConditions;
         private City _selectedCity;
 
+        public ObservableCollection<City> Cities { get; set; }
+
         public WeatherViewModel()
         {
-            SelectedCity = new City()
+            if (DesignerProperties.GetIsInDesignMode(new System.Windows.DependencyObject()))
             {
-                LocalizedName = "New York"
-            };
-            CurrentConditions = new CurrentConditions()
-            {
-                WeatherText = "Mostly cloudy",
-                Temperature = new Temperature() 
-                { 
-                    Metric = new Units() 
-                    { 
-                        Value = 21 
-                    } 
-                }
-            };
+                SelectedCity = CityExample();
+                CurrentConditions = ConditionsExample();
+            }
+
+            SearchCommand = new(this);
+            Cities = new();
         }
+
+        public SearchCommand SearchCommand{ get; set; }
 
         public string Query
         {
@@ -64,10 +65,38 @@ namespace WeatherApp.ViewModel
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler CanExecuteChanged;
+
+        public async Task QueryForCities()
+        {
+            var cities = await AccuWeatherHelper.GetCities(Query);
+            Cities.Clear();
+            foreach (var city in cities) 
+            {
+                Cities.Add(city);
+            }
+        }
 
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        private static City CityExample() => new()
+        {
+            LocalizedName = "New York"
+        };
+
+        private static CurrentConditions ConditionsExample() => new()
+        {
+            WeatherText = "Mostly cloudy",
+            Temperature = new Temperature()
+            {
+                Metric = new Units()
+                {
+                    Value = 21
+                }
+            }
+        };
     }
 }
