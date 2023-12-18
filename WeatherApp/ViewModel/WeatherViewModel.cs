@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using WeatherApp.Model;
@@ -82,9 +83,10 @@ namespace WeatherApp.ViewModel
                     Cities.Add(city);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //Log.Error("message");
+                MessageBox.Show($"Could not load city list for {Query}\nException message: {ex.Message}", 
+                    "Data error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -102,9 +104,10 @@ namespace WeatherApp.ViewModel
                 OnPropertyChanged(nameof(SelectedCity));
                 Cities.Clear();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //Log.Error("message");
+                MessageBox.Show($"Could not load current conditions for {SelectedCity.LocalizedName}\nException message: {ex.Message}", 
+                    "Data error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

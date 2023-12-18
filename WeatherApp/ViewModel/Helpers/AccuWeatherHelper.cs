@@ -24,7 +24,9 @@ namespace WeatherApp.ViewModel.Helpers
             var response = await httpClient.GetAsync(url);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                throw new HttpRequestException($"Failed to load cities by query: {query}", null, response.StatusCode);
+                throw new HttpRequestException($"Failed to load query: {query}" +
+                    $"\nHttp status code: {(int)response.StatusCode} - {response.StatusCode}\nReason: {response.ReasonPhrase}", 
+                    null, response.StatusCode);
             }
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
@@ -40,7 +42,9 @@ namespace WeatherApp.ViewModel.Helpers
             var response = await httpClient.GetAsync(url);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                throw new HttpRequestException($"Failed to load conditions for city key: {cityKey}", null, response.StatusCode);
+                throw new HttpRequestException($"Failed to load conditions for city key: {cityKey}" +
+                    $"\nHttp status code: {(int)response.StatusCode} - {response.StatusCode}\nReason: {response.ReasonPhrase}",
+                    null, response.StatusCode);
             }
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
