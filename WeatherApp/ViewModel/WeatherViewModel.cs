@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Threading;
 using WeatherApp.Model;
 using WeatherApp.ViewModel.Commands;
 using WeatherApp.ViewModel.Helpers;
@@ -32,7 +33,7 @@ namespace WeatherApp.ViewModel
             Cities = new();
         }
 
-        public SearchCommand SearchCommand{ get; set; }
+        public SearchCommand SearchCommand { get; set; }
 
         public string Query
         {
@@ -60,7 +61,10 @@ namespace WeatherApp.ViewModel
             set
             {
                 _selectedCity = value;
-                OnPropertyChanged(nameof(SelectedCity));
+                if (_selectedCity != null)
+                {
+                    System.Windows.Application.Current.Dispatcher.BeginInvoke(async () => await GetCurrentConditions());
+                }
             }
         }
 
@@ -69,17 +73,39 @@ namespace WeatherApp.ViewModel
 
         public async Task QueryForCities()
         {
-            var cities = await AccuWeatherHelper.GetCities(Query);
-            Cities.Clear();
-            foreach (var city in cities) 
+            try
             {
-                Cities.Add(city);
+                var cities = await AccuWeatherHelper.GetCities(Query);
+                Cities.Clear();
+                foreach (var city in cities)
+                {
+                    Cities.Add(city);
+                }
+            }
+            catch (Exception)
+            {
+                //Log.Error("message");
             }
         }
 
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public async Task GetCurrentConditions()
+        {
+            try
+            {
+                Query = string.Empty;
+                CurrentConditions = await AccuWeatherHelper.GetCurrentConditions(SelectedCity.Key);
+                OnPropertyChanged(nameof(SelectedCity));
+                Cities.Clear();
+            }
+            catch (Exception)
+            {
+                //Log.Error("message");
+            }
         }
 
         private static City CityExample() => new()
