@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -64,7 +65,7 @@ namespace WeatherApp.ViewModel
                 _selectedCity = value;
                 if (_selectedCity != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.BeginInvoke(async () => await GetCurrentConditions());
+                    Application.Current.Dispatcher.BeginInvoke(async () => await GetCurrentConditions());
                 }
             }
         }
